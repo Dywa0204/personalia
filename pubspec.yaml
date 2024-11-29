@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  audio_session: ^0.1.21
   shared_preferences: ^2.2.3
   http: ^1.2.1
   sliding_up_panel: ^2.0.0+1
@@ -35,7 +34,6 @@ dependencies:
   photo_view: ^0.15.0
   google_mlkit_face_detection: 0.11.0
   camera: 0.11.0+2
-  camera_android_camerax: 0.6.7+2
   firebase_storage: ^12.3.5
   cloud_firestore: ^5.4.5
   firebase_app_check: ^0.3.1+5
