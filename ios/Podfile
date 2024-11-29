@@ -1,0 +1,28 @@
+platform :ios, '13'
+
+use_frameworks! # Add this if required by dependencies
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+workspace 'ios/Runner.xcworkspace'
+
+flutter_application_path = File.expand_path('..', __FILE__)
+eval(File.read(File.join(flutter_application_path, 'Flutter', 'podhelper.rb')))
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    
+    # Disable microphone-related code if not needed
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'AUDIO_SESSION_MICROPHONE=0'
+      ]
+    end
+  end
+end
