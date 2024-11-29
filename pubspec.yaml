@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  audio_session: ^0.1.21
   shared_preferences: ^2.2.3
   http: ^1.2.1
   sliding_up_panel: ^2.0.0+1
@@ -42,7 +43,6 @@ dependencies:
   dart_ping: ^9.0.1
   file_picker: ^8.1.4
   workmanager: ^0.5.2
-  audio_session: ^0.1.7
 
 dev_dependencies:
   flutter_test:
