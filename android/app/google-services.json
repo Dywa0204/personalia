@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302859713504",
+    "project_id": "fg-personalia",
+    "storage_bucket": "fg-personalia.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302859713504:android:8d75546701ad9983478985",
+        "android_client_info": {
+          "package_name": "co.id.farmagitechs.personalia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6Uhydn5-yaQjoGn-7NgD7lNNtynCVmfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
