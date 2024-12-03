@@ -9,7 +9,7 @@ import 'package:personalia/widget/responsive/responsive_icon.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+// import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -63,7 +63,7 @@ class _CameraWidgetState extends State<CameraWidget> {
   bool _canTakePicture = false;
   bool _isCameraFlipped = false;
   String _faceDetectionText = "";
-  FaceDetector? _faceDetector;
+  // FaceDetector? _faceDetector;
 
   //Firebase
   final storageRef = FirebaseStorage.instance.ref();
@@ -175,14 +175,14 @@ class _CameraWidgetState extends State<CameraWidget> {
     _faceDetectionIsBusy = false;
     _faceDetectionCanProcess = true;
 
-    _faceDetector = new FaceDetector(
-      options: FaceDetectorOptions(
-          enableContours: true,
-          enableClassification: true,
-          enableTracking: true,
-          minFaceSize: 0.1
-      ),
-    );
+    // _faceDetector = new FaceDetector(
+    //   options: FaceDetectorOptions(
+    //       enableContours: true,
+    //       enableClassification: true,
+    //       enableTracking: true,
+    //       minFaceSize: 0.1
+    //   ),
+    // );
 
     await GeneralHelper.initializeFirstCamera();
     _cameraController = new CameraController(
@@ -192,7 +192,7 @@ class _CameraWidgetState extends State<CameraWidget> {
 
     Future<void> _initializeControllerFuture = _cameraController!.initialize();
     _initializeControllerFuture.then((_) async {
-      await _cameraController!.startImageStream(_processCameraImage);
+      // await _cameraController!.startImageStream(_processCameraImage);
 
       setState(() {
         _cameraPreview = CameraPreview(_cameraController!);
@@ -202,77 +202,77 @@ class _CameraWidgetState extends State<CameraWidget> {
   }
 
   // Beginning of Image Face Detection Method
-  Future _processCameraImage(final CameraImage image) async {
-    try {
-      final WriteBuffer allBytes = WriteBuffer();
-      for (final Plane plane in image.planes) allBytes.putUint8List(plane.bytes);
-      final bytes = allBytes.done().buffer.asUint8List();
-
-      final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
-      final camera = GeneralHelper.frontCamera;
-      final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation) ?? InputImageRotation.rotation0deg;
-      final inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw) ?? InputImageFormat.nv21;
-
-      final inputImageData = InputImageMetadata(
-        size: imageSize,
-        rotation: imageRotation,
-        format: inputImageFormat,
-        bytesPerRow: image.planes.first.bytesPerRow,
-      );
-      print("Input image size   : ${inputImageData.size.width}, ${inputImageData.size.height}");
-      print("Input image format : ${inputImageData.format}");
-      print("Input image rotate : ${inputImageData.rotation}");
-      print("Input image rotate : ${inputImageData.bytesPerRow}");
-
-      final inputImage = InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
-      await _processImage(inputImage);
-    } catch (e) {
-      print("Error processing camera image: $e");
-    }
-  }
-
-  Future<void> _processImage(final InputImage inputImage) async {
-    if (!_faceDetectionCanProcess) return;
-    if (_faceDetectionIsBusy) return;
-    _faceDetectionIsBusy = true;
-
-    try {
-      final faces = await _faceDetector?.processImage(inputImage);
-      if (inputImage.metadata?.size != null && inputImage.metadata?.rotation != null) {
-        final painter = FaceDetectorPainter(
-            faces!,
-            inputImage.metadata!.size,
-            inputImage.metadata!.rotation,
-            !_isCameraFlipped,
-            (isFull) {
-              _canTakePicture = isFull;
-              if (!isFull) {
-                _faceDetectionText = "Wajah tidak terlihat secara penuh";
-              } else {
-                _faceDetectionText = "Wajah terdeteksi";
-              }
-            }
-        );
-        if (faces.length <= 0) {
-          _faceDetectionText = "Wajah tidak ditemukan";
-        }
-
-        _customPaint = CustomPaint(painter: painter);
-      } else {
-        _faceDetectionText = "Perangkat Anda tidak mendukung deteksi wajah";
-        _customPaint = null;
-        _faceDetectionIsBusy = false;
-      }
-    } catch (e) {
-      _faceDetectionText = "Perangkat Anda tidak mendukung deteksi wajah";
-      _customPaint = null;
-      _faceDetectionIsBusy = false;
-    }
-
-    _faceDetectionIsBusy = false;
-
-    if (mounted) setState(() {});
-  }
+  // Future _processCameraImage(final CameraImage image) async {
+  //   try {
+  //     final WriteBuffer allBytes = WriteBuffer();
+  //     for (final Plane plane in image.planes) allBytes.putUint8List(plane.bytes);
+  //     final bytes = allBytes.done().buffer.asUint8List();
+  //
+  //     final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
+  //     final camera = GeneralHelper.frontCamera;
+  //     final imageRotation = InputImageRotationValue.fromRawValue(camera.sensorOrientation) ?? InputImageRotation.rotation0deg;
+  //     final inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw) ?? InputImageFormat.nv21;
+  //
+  //     final inputImageData = InputImageMetadata(
+  //       size: imageSize,
+  //       rotation: imageRotation,
+  //       format: inputImageFormat,
+  //       bytesPerRow: image.planes.first.bytesPerRow,
+  //     );
+  //     print("Input image size   : ${inputImageData.size.width}, ${inputImageData.size.height}");
+  //     print("Input image format : ${inputImageData.format}");
+  //     print("Input image rotate : ${inputImageData.rotation}");
+  //     print("Input image rotate : ${inputImageData.bytesPerRow}");
+  //
+  //     final inputImage = InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
+  //     await _processImage(inputImage);
+  //   } catch (e) {
+  //     print("Error processing camera image: $e");
+  //   }
+  // }
+  //
+  // Future<void> _processImage(final InputImage inputImage) async {
+  //   if (!_faceDetectionCanProcess) return;
+  //   if (_faceDetectionIsBusy) return;
+  //   _faceDetectionIsBusy = true;
+  //
+  //   try {
+  //     final faces = await _faceDetector?.processImage(inputImage);
+  //     if (inputImage.metadata?.size != null && inputImage.metadata?.rotation != null) {
+  //       final painter = FaceDetectorPainter(
+  //           faces!,
+  //           inputImage.metadata!.size,
+  //           inputImage.metadata!.rotation,
+  //           !_isCameraFlipped,
+  //           (isFull) {
+  //             _canTakePicture = isFull;
+  //             if (!isFull) {
+  //               _faceDetectionText = "Wajah tidak terlihat secara penuh";
+  //             } else {
+  //               _faceDetectionText = "Wajah terdeteksi";
+  //             }
+  //           }
+  //       );
+  //       if (faces.length <= 0) {
+  //         _faceDetectionText = "Wajah tidak ditemukan";
+  //       }
+  //
+  //       _customPaint = CustomPaint(painter: painter);
+  //     } else {
+  //       _faceDetectionText = "Perangkat Anda tidak mendukung deteksi wajah";
+  //       _customPaint = null;
+  //       _faceDetectionIsBusy = false;
+  //     }
+  //   } catch (e) {
+  //     _faceDetectionText = "Perangkat Anda tidak mendukung deteksi wajah";
+  //     _customPaint = null;
+  //     _faceDetectionIsBusy = false;
+  //   }
+  //
+  //   _faceDetectionIsBusy = false;
+  //
+  //   if (mounted) setState(() {});
+  // }
   // End of Image Face Detection Method
 
 
@@ -391,7 +391,7 @@ class _CameraWidgetState extends State<CameraWidget> {
   void _resumeCamera() {
     setState(() {
       _cameraController!.resumePreview().then((_) {
-        _cameraController!.startImageStream(_processCameraImage);
+        // _cameraController!.startImageStream(_processCameraImage);
         _canTakePicture = true;
 
         _leftButton = _flipCameraButton();
@@ -410,7 +410,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     await _cameraController!.stopImageStream();
     await _cameraController!.dispose();
     _faceDetectionCanProcess = false;
-    await _faceDetector?.close();
+    // await _faceDetector?.close();
     _canTakePicture = false;
   }
 
@@ -424,59 +424,59 @@ class _CameraWidgetState extends State<CameraWidget> {
         _showUnknownDialog();
       } else {
         LocationData? locationData = _locationWidgetController.getCurrentLocation();
-        User? user = await GeneralHelper.getUserFromPreferences();
+        // User? user = await GeneralHelper.getUserFromPreferences();
 
         LoadingDialog.of(context).show(message: "Tunggu Sebentar...", isDismissible: false);
 
-        String attendanceMessage = await _attendanceController.add(
-            idKaryawan: user!.idKaryawan,
-            latitude: "${locationData?.latitude ?? "0.0"}",
-            longitude: "${locationData?.longitude ?? "0.0"}",
-            status: "${widget.isAttendanceIN ? "IN" : "OUT"}",
-            location: "${address}",
-            foto: "data:image/png;base64,${_storedImage}"
-        );
+        // String attendanceMessage = await _attendanceController.add(
+        //     idKaryawan: user!.idKaryawan,
+        //     latitude: "${locationData?.latitude ?? "0.0"}",
+        //     longitude: "${locationData?.longitude ?? "0.0"}",
+        //     status: "${widget.isAttendanceIN ? "IN" : "OUT"}",
+        //     location: "${address}",
+        //     foto: "data:image/png;base64,${_storedImage}"
+        // );
         // String attendanceMessage = "bisa dongg";
         LoadingDialog.of(context).hide();
 
-        if (attendanceMessage.isNotEmpty) {
-          CustomSnackBar.of(context).show(
-              message: attendanceMessage,
-              onTop: true,
-              showCloseIcon: true,
-              prefixIcon: Icons.check_circle,
-              backgroundColor: CustomColor.success,
-              duration: Duration(seconds: 5));
-
-          widget.slideUpPanelController.close();
-          widget.attendanceScreenController.refreshData();
-
-          _resetButton();
-
-          bool isRecorded = await GeneralHelper.preferences.getBool("isRecorded") ?? false;
-          print("Is Recorded: $isRecorded");
-
-          if (isRecorded) {
-            String filePath = await GeneralHelper.saveStringToFile(_storedImage);
-            Map<String, dynamic> inputData = {
-              'id_karyawan': "${user.idKaryawan}",
-              'name': "${user.nama}",
-              'att_option': "${widget.isAttendanceIN ? "IN" : "OUT"}",
-              'location_lat': "${locationData?.latitude.toString() ?? "0.0"}",
-              'location_lng': "${locationData?.longitude.toString() ?? "0.0"}",
-              'address': "${address}",
-              "filePath": filePath
-            };
-
-            Workmanager().registerOneOffTask(
-              "uploader",
-              "upload_firebase",
-              inputData: inputData,
-            );
-          }
-        } else {
-          _showErrorDialog(context);
-        }
+        // if (attendanceMessage.isNotEmpty) {
+        //   CustomSnackBar.of(context).show(
+        //       message: attendanceMessage,
+        //       onTop: true,
+        //       showCloseIcon: true,
+        //       prefixIcon: Icons.check_circle,
+        //       backgroundColor: CustomColor.success,
+        //       duration: Duration(seconds: 5));
+        //
+        //   widget.slideUpPanelController.close();
+        //   widget.attendanceScreenController.refreshData();
+        //
+        //   _resetButton();
+        //
+        //   bool isRecorded = await GeneralHelper.preferences.getBool("isRecorded") ?? false;
+        //   print("Is Recorded: $isRecorded");
+        //
+        //   if (isRecorded) {
+        //     String filePath = await GeneralHelper.saveStringToFile(_storedImage);
+        //     Map<String, dynamic> inputData = {
+        //       'id_karyawan': "${user.idKaryawan}",
+        //       'name': "${user.nama}",
+        //       'att_option': "${widget.isAttendanceIN ? "IN" : "OUT"}",
+        //       'location_lat': "${locationData?.latitude.toString() ?? "0.0"}",
+        //       'location_lng': "${locationData?.longitude.toString() ?? "0.0"}",
+        //       'address': "${address}",
+        //       "filePath": filePath
+        //     };
+        //
+        //     Workmanager().registerOneOffTask(
+        //       "uploader",
+        //       "upload_firebase",
+        //       inputData: inputData,
+        //     );
+        //   }
+        // } else {
+        //   _showErrorDialog(context);
+        // }
       }
     } catch (error) {
       LoadingDialog.of(context).hide();
