@@ -1,28 +1,22 @@
-platform :ios, '13'
+platform :ios, '15.5.0'
 
-use_frameworks! # Add this if required by dependencies
+workspace 'ios/Runner.xcworkspace' # Tambahkan jika belum ada
 
-project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
-}
-
-workspace 'ios/Runner.xcworkspace'
-
-flutter_application_path = File.expand_path('..', __FILE__)
-eval(File.read(File.join(flutter_application_path, 'Flutter', 'podhelper.rb')))
+$iOSVersion = '15.5.0'
 
 post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=*]"] = "armv7"
+    config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = $iOSVersion
+  end
+
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    
-    # Disable microphone-related code if not needed
+
     target.build_configurations.each do |config|
-      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
-        '$(inherited)',
-        'AUDIO_SESSION_MICROPHONE=0'
-      ]
+      if Gem::Version.new($iOSVersion) > Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = $iOSVersion
+      end
     end
   end
 end
