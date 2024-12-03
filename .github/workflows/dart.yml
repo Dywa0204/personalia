@@ -1,0 +1,46 @@
+name: Build iOS .ipa
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_ios:
+    name: Build iOS App
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.1'
+
+      - name: Clean Flutter Project
+        run: flutter clean
+
+      - name: Update CocoaPods Repos
+        run: pod repo update
+        working-directory: ios
+
+      - name: Install CocoaPods
+        run: pod install --repo-update
+        working-directory: ios
+
+      - name: Prepare iOS Project
+        run: flutter precache && flutter build ios --no-codesign
+
+      - name: Verify Podfile.lock
+        run: cat ios/Podfile.lock
+
+      - name: Build .ipa
+        env:
+          FLUTTER_ROOT: ${{ env.HOME }}/.flutter
+        run: flutter build ipa --release --no-codesign --build-name=1.0.0 --build-number=1
+
+      - name: Upload .ipa
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-app
+          path: build/ios/ipa/
